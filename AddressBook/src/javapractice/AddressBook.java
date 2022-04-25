@@ -10,8 +10,16 @@ public class AddressBook {
         contactList.add(contact);
     }
 
-    public void remove(String name){
-        contactList.removeIf(contact -> name == contact.firstName);
+    public void remove(Contact contact){
+        contactList.remove(contact);
+    }
+
+    public Contact getContact(String name) {
+        for(Contact contact: contactList) {
+            if(contact.firstName.equals(name))
+                return contact;
+        }
+        return null;
     }
 
     public List<Contact> getContactList() {
