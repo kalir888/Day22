@@ -1,10 +1,10 @@
 package javapractice;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AddressBook {
-    private List<Contact> contactList = new ArrayList<>();
+    private Set<Contact> contactList = new HashSet<>();
 
     public void add(Contact contact) {
         contactList.add(contact);
@@ -21,8 +21,7 @@ public class AddressBook {
         }
         return null;
     }
-
-    public List<Contact> getContactList() {
+    public Set<Contact> getContactList() {
         return contactList;
     }
 }

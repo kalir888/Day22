@@ -3,34 +3,52 @@ package javapractice;
 import java.util.Scanner;
 
 public class Main {
-    AddressBook addressBook = new AddressBook();
+    AddressBookStorage addressBookStorage = AddressBookStorage.getInstance();
 
     public void handleUserMenuOption(int choice) {
         Scanner get = new Scanner(System.in);
 
         switch(choice) {
             case 1:
-                addContact(addressBook);
+                create();
                 break;
             case 2:
-                UserInterface userInterface = new UserInterface();
-                userInterface.print(addressBook.getContactList());
+                System.out.println("Enter the name of an Address Book");
+                String bookName = get.next();
+                if(!addressBookStorage.addressBookNameValidCheck(bookName)) {
+                    AddressBook addressBook = addressBookStorage.getAddressBook(bookName);
+                    UserInterface userInterface = new UserInterface();
+                    userInterface.print(addressBook.getContactList());
+                }else
+                    System.out.println("Address Book name not found");
                 break;
             case 3:
-                System.out.println("Enter First Name of the Contact to edit");
-                Contact contactToEdit = addressBook.getContact(get.next());
-                if(contactToEdit != null)
-                    update(contactToEdit);
-                else
-                    System.out.println("Given Name not found \n if you want to add new Contact use Add Contact option in Menu");
+                System.out.println("Enter the name of an Address Book");
+                String bookNameToEdit = get.next();
+                if(!addressBookStorage.addressBookNameValidCheck(bookNameToEdit)) {
+                    AddressBook addressBook = addressBookStorage.getAddressBook(bookNameToEdit);
+                    System.out.println("Enter First Name of the Contact to edit");
+                    Contact contactToEdit = addressBook.getContact(get.next());
+                    if(contactToEdit != null)
+                        edit(contactToEdit);
+                    else
+                        System.out.println("Contact Name not found in this Address Book");
+                }else
+                    System.out.println("Address Book name not found");
                 break;
             case 4:
-                System.out.println("Enter First Name of the Contact to remove");
-                Contact contactToRemove = addressBook.getContact(get.next());
-                if(contactToRemove != null)
-                    addressBook.remove(contactToRemove);
-                else
-                    System.out.println("Given Name not found \n if you want to add new Contact use Add Contact option in Menu");
+                System.out.println("Enter the name of an Address Book");
+                String bookNameToRemoveContact = get.next();
+                if(!addressBookStorage.addressBookNameValidCheck(bookNameToRemoveContact)) {
+                    AddressBook addressBook = addressBookStorage.getAddressBook(bookNameToRemoveContact);
+                    System.out.println("Enter First Name of the Contact to remove");
+                    Contact contactToRemove = addressBook.getContact(get.next());
+                    if(contactToRemove != null)
+                        addressBook.remove(contactToRemove);
+                    else
+                        System.out.println("Contact Name not found in this AddressBook");
+                }else
+                    System.out.println("Address Book name not found");
                 break;
             default:
                 System.out.println("Invalid Menu option");
@@ -38,7 +56,7 @@ public class Main {
         }
     }
 
-    private void update(Contact contact) {
+    private void edit(Contact contact) {
         int updateChoice = 0;
         UserInterface userInterface = new UserInterface();
         while(updateChoice <= 8) {
@@ -46,7 +64,7 @@ public class Main {
                 System.out.println("Returning to Menu");
                 break;
             }
-            updateChoice = userInterface.showUpdateMenu();
+            updateChoice = userInterface.showEditMenu();
             handleUserEditOption(updateChoice,contact);
         }
     }
@@ -88,39 +106,63 @@ public class Main {
         }
     }
 
-    private void addContact(AddressBook addressBook) {
+    private void create() {
         Scanner get = new Scanner(System.in);
-        System.out.println("Enter the First Name");
-        Contact contact = new Contact(get.next());
-        String SKIP = "1";
-        System.out.println("Enter the Last Name\n to skip the step press 1");
-        String temp = get.next();
-        if(!temp.equals(SKIP))
-            contact.lastName = temp;
-        System.out.println("Enter the Address\n to skip the step press 1");
-        temp = get.next();
-        if(!temp.equals(SKIP))
-            contact.address = temp;
-        System.out.println("Enter the city\n to skip the step press 1");
-        temp = get.next();
-        if(!temp.equals(SKIP))
-            contact.city = temp;
-        System.out.println("Enter the state\n to skip the step press 1");
-        temp = get.next();
-        if(!temp.equals(SKIP))
-            contact.state = temp;
-        System.out.println("Enter the pin-code\n to skip the step press 1");
-        temp = get.next();
-        if(!temp.equals(SKIP))
-            contact.pinCode = temp;
-        System.out.println("Enter the phone number");
-        contact.phoneNumber = get.next();
-        System.out.println("Enter the email id\n to skip the step press 1");
-        temp = get.next();
-        if(!temp.equals(SKIP))
-            contact.emailId = temp;
+        System.out.println("Select to create new\n1.AddressBook\n2.Contact");
+        int userChoice = get.nextInt();
+        switch(userChoice) {
+            case 1:
+                System.out.println("Enter the Name of Address Book\nnote: don't give space in name");
+                String name = get.next();
+                if(addressBookStorage.addressBookNameValidCheck(name)) {
+                    AddressBook addressBook = new AddressBook();
+                    addressBookStorage.addAddressBook(name, addressBook);
+                }else
+                    System.out.println("Address book name already exist");
+                break;
+            case 2:
+                System.out.println("Enter the name of an Address Book");
+                String bookName = get.next();
+                if (!addressBookStorage.addressBookNameValidCheck(bookName)) {
+                    AddressBook addressBook = addressBookStorage.getAddressBook(bookName);
+                    System.out.println("Enter the First Name");
+                    Contact contact = new Contact(get.next());
+                    String SKIP = "1";
+                    System.out.println("Enter the Last Name\n to skip the step press 1");
+                    String temp = get.next();
+                    if (!temp.equals(SKIP))
+                        contact.lastName = temp;
+                    System.out.println("Enter the Address\n to skip the step press 1");
+                    temp = get.next();
+                    if (!temp.equals(SKIP))
+                        contact.address = temp;
+                    System.out.println("Enter the city\n to skip the step press 1");
+                    temp = get.next();
+                    if (!temp.equals(SKIP))
+                        contact.city = temp;
+                    System.out.println("Enter the state\n to skip the step press 1");
+                    temp = get.next();
+                    if (!temp.equals(SKIP))
+                        contact.state = temp;
+                    System.out.println("Enter the pin-code\n to skip the step press 1");
+                    temp = get.next();
+                    if (!temp.equals(SKIP))
+                        contact.pinCode = temp;
+                    System.out.println("Enter the phone number");
+                    contact.phoneNumber = get.next();
+                    System.out.println("Enter the email id\n to skip the step press 1");
+                    temp = get.next();
+                    if (!temp.equals(SKIP))
+                        contact.emailId = temp;
 
-        addressBook.add(contact);
+                    addressBook.add(contact);
+                } else
+                    System.out.println("Address Book name not found");
+                break;
+            default:
+                System.out.println("Invalid option");
+                break;
+        }
     }
 
     public static void main(String[] args) {
