@@ -18,10 +18,17 @@ public class Main {
                 break;
             case 3:
                 System.out.println("Enter First Name of the Contact to edit");
-                String name = get.next();
-                Contact contactToEdit = addressBook.getContact(name);
+                Contact contactToEdit = addressBook.getContact(get.next());
                 if(contactToEdit != null)
                     update(contactToEdit);
+                else
+                    System.out.println("Given Name not found \n if you want to add new Contact use Add Contact option in Menu");
+                break;
+            case 4:
+                System.out.println("Enter First Name of the Contact to remove");
+                Contact contactToRemove = addressBook.getContact(get.next());
+                if(contactToRemove != null)
+                    addressBook.remove(contactToRemove);
                 else
                     System.out.println("Given Name not found \n if you want to add new Contact use Add Contact option in Menu");
                 break;
